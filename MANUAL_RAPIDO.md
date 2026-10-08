@@ -21,7 +21,8 @@ O estado atual está configurado para:
 ## 2. Requisitos
 
 - Windows ou outro sistema com Python compatível;
-- **Miniforge/Mamba**;
+- Python 3.12 recomendado;
+- um gerenciador de ambiente: Miniforge/Mamba, Conda ou `venv` + `pip`;
 - internet para baixar as fontes oficiais;
 - internet para carregar o mapa OpenFreeMap;
 - espaço livre recomendado de pelo menos **2 GB**, considerando ZIP, CSV extraído, resultados intermediários e folga;
@@ -40,17 +41,21 @@ dependencies:
   - folium>=0.17
 ```
 
+O arquivo `requirements.txt` contém as mesmas dependências para quem preferir instalar com `pip` em um ambiente `venv` ou em uma instalação Python convencional.
+
 ---
 
-## 3. Preparar o ambiente Miniforge
+## 3. Preparar o ambiente Python
 
-Abra o **Miniforge Prompt**. Também é possível usar PowerShell depois que o Miniforge estiver inicializado.
+O projeto não exige Miniforge. Para o desenvolvimento deste projeto, a opção recomendada é Miniforge/Mamba, mas as opções abaixo são equivalentes para quem estiver usando outro computador.
 
 Entre na pasta do projeto:
 
 ```powershell
 # Abra o terminal na raiz deste projeto antes de executar os comandos.
 ```
+
+### 3.1 Miniforge/Mamba — opção recomendada para este projeto
 
 Na primeira utilização, crie o ambiente:
 
@@ -66,14 +71,42 @@ mamba env update -f environment.yml
 mamba activate eleicoes-2026
 ```
 
-Confira se o ambiente correto está ativo:
+### 3.2 Conda — alternativa compatível
+
+O `environment.yml` segue o formato padrão de ambientes Conda:
 
 ```powershell
-mamba env list
+conda env create -f environment.yml
+conda activate eleicoes-2026
+```
+
+### 3.3 Python `venv` + `pip` — alternativa universal
+
+Com Python 3.12 instalado:
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+```
+
+No Linux/macOS:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+```
+
+### 3.4 Conferir a instalação
+
+```powershell
 python --version
 ```
 
-O ambiente ativo deverá ser `eleicoes-2026`. As instruções deste manual usam `mamba`, não o `conda` padrão.
+Com Miniforge/Mamba ou Conda, o ambiente ativo deverá ser `eleicoes-2026`. Com `venv`, o prompt normalmente exibirá o nome `.venv`.
 
 ---
 
@@ -84,7 +117,8 @@ O ambiente ativo deverá ser `eleicoes-2026`. As instruções deste manual usam 
 | `resultado-eleicoes-2026.py` | Programa principal: baixa, extrai, normaliza e agrega o BU. |
 | `mapa-eleicoes-2026.py` | Gera o HTML do mapa interativo. |
 | `filtrar-localidade.py` | Filtra os resultados para um município, zona e local escolhidos. |
-| `environment.yml` | Dependências do ambiente Miniforge/Mamba. |
+| `environment.yml` | Define um ambiente Conda-compatível e suas dependências. |
+| `requirements.txt` | Dependências para instalação com `pip` em `venv` ou Python convencional. |
 | `README.md` | Visão técnica, fontes e fluxo resumido. |
 | `MANUAL_RAPIDO.md` | Este manual operacional. |
 | `dados/` | ZIPs e CSVs extraídos do TSE; dados locais, ignorados pelo Git. |
@@ -100,8 +134,6 @@ O ambiente ativo deverá ser `eleicoes-2026`. As instruções deste manual usam 
 Este é o fluxo recomendado para uma instalação nova:
 
 ```powershell
-mamba activate eleicoes-2026
-
 python .\resultado-eleicoes-2026.py `
   --baixar `
   --localizacoes-tse `
@@ -148,8 +180,6 @@ python .\resultado-eleicoes-2026.py `
 Se o ZIP já existir em `dados/`:
 
 ```powershell
-mamba activate eleicoes-2026
-
 python .\resultado-eleicoes-2026.py `
   --localizacoes-tse `
   --processar `
@@ -202,8 +232,6 @@ Use o texto apenas para descobrir o registro. Na etapa seguinte, informe os cód
 O utilitário `filtrar-localidade.py` reduz os resultados completos para um município, zona e local:
 
 ```powershell
-mamba activate eleicoes-2026
-
 python .\filtrar-localidade.py `
   --municipio 97012 `
   --zona 1 `
@@ -282,8 +310,6 @@ Registra a fonte, os parâmetros, as linhas processadas, as combinações agrega
 Depois do processamento completo:
 
 ```powershell
-mamba activate eleicoes-2026
-
 python .\mapa-eleicoes-2026.py `
   --entrada outputs\totais_por_local.csv `
   --presidente outputs\votos_presidente_por_local.csv `
@@ -407,9 +433,9 @@ O repositório deve conter o código, `environment.yml`, documentação e o mode
 
 ## 14. Solução de problemas
 
-### `mamba` não é reconhecido
+### O comando do ambiente não é reconhecido
 
-Abra o **Miniforge Prompt**. O projeto deve ser executado no ambiente Miniforge, não no Python global do Windows.
+Escolha uma das opções da seção 3: abra o Miniforge Prompt para usar Mamba, inicialize o Conda ou crie um `.venv` e instale `requirements.txt` com `pip`. O importante é executar os scripts com o ambiente escolhido ativado.
 
 ### O ZIP não foi encontrado
 

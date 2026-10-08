@@ -42,14 +42,17 @@ Votos em branco aparecem separadamente como `DS_TIPO_VOTAVEL=Branco` e `NR_VOTAV
 
 O download principal é um pacote do DF. No estado atual do projeto, o programa usa as constantes `UF="DF"`, turno `1` e o conjunto eleitoral de 2026; portanto, não se deve trocar a URL por outro pleito ou UF sem revisar o código e o leiaute.
 
-## Ambiente Miniforge/Mamba
+## Ambiente Python
 
-O projeto usa **Miniforge/Mamba**. As instruções abaixo não dependem do Python global do Windows.
+O projeto não exige Miniforge, Conda ou um gerenciador específico. Ele precisa apenas de Python compatível e das dependências listadas em `environment.yml` ou `requirements.txt`.
 
-No **Miniforge Prompt** ou em um PowerShell com o Miniforge disponível:
+Para o desenvolvimento deste projeto, a opção recomendada é **Miniforge/Mamba**, mas outras pessoas podem usar Conda ou um ambiente virtual Python (`venv`) com `pip`.
+
+### Opção recomendada para este projeto: Miniforge/Mamba
+
+Abra o **Miniforge Prompt** na raiz do projeto:
 
 ```powershell
-# Abra o terminal na raiz deste projeto antes de executar os comandos.
 mamba env create -f environment.yml
 mamba activate eleicoes-2026
 ```
@@ -61,10 +64,38 @@ mamba env update -f environment.yml
 mamba activate eleicoes-2026
 ```
 
-O ambiente definido em `environment.yml` contém Python 3.12, pandas, requests e folium. Confira a instalação:
+### Opção alternativa: Conda
+
+O arquivo `environment.yml` segue o formato compatível com Conda:
 
 ```powershell
-mamba env list
+conda env create -f environment.yml
+conda activate eleicoes-2026
+```
+
+### Opção universal: Python `venv` e `pip`
+
+Com Python 3.12 instalado:
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+```
+
+No Linux/macOS, a ativação equivalente é:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+```
+
+Em qualquer opção, confira a versão do Python:
+
+```powershell
 python --version
 ```
 
@@ -75,7 +106,8 @@ python --version
 | `resultado-eleicoes-2026.py` | Baixa, extrai, normaliza, processa e agrega os Boletins de Urna. |
 | `mapa-eleicoes-2026.py` | Gera o mapa HTML interativo dos locais com coordenadas. |
 | `filtrar-localidade.py` | Seleciona município, zona e local a partir dos resultados processados. |
-| `environment.yml` | Define o ambiente Miniforge/Mamba e as dependências. |
+| `environment.yml` | Define um ambiente Conda-compatível e suas dependências. |
+| `requirements.txt` | Dependências para instalação com `pip` em `venv` ou Python convencional. |
 | `README.md` | Visão técnica, fontes e fluxo resumido. |
 | `MANUAL_RAPIDO.md` | Manual operacional detalhado. |
 | `inputs/local_votacao_df_modelo.csv` | Modelo opcional para localização manual. |
@@ -91,8 +123,6 @@ Os dados baixados e os resultados gerados não são necessários para instalar o
 O comando abaixo baixa o ZIP de Boletins de Urna, baixa a base oficial de localidades, extrai os CSVs e gera todas as agregações:
 
 ```powershell
-mamba activate eleicoes-2026
-
 python .\resultado-eleicoes-2026.py `
   --baixar `
   --localizacoes-tse `
@@ -117,8 +147,6 @@ O download é **em lote para o DF**. A seleção da localidade acontece depois, 
 Se o ZIP do BU já estiver em `dados/`, não é necessário baixá-lo novamente:
 
 ```powershell
-mamba activate eleicoes-2026
-
 python .\resultado-eleicoes-2026.py `
   --localizacoes-tse `
   --processar `
