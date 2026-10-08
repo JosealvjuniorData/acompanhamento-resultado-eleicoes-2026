@@ -1,0 +1,38 @@
+# Estado local do Manus
+.manus/
+.work/
+
+# Ambientes Python/Miniforge locais
+.venv/
+.conda/
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+
+# Jupyter e arquivos temporários
+.ipynb_checkpoints/
+*.log
+*.tmp
+*.bak
+
+# Segredos e configurações locais
+.env
+.env.*
+!.env.example
+
+# Sistema operacional e editores
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Dados brutos e arquivos derivados grandes
+bus_sp/
+dados/
+outputs/
+inputs/local_votacao_df.csv
+*.zip
+*.7z
+*.rar
+*.parquet
